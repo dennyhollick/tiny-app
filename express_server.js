@@ -40,6 +40,11 @@ var randomString = function generateRandomString() {
   return (Math.floor((1 + Math.random()) * 0x1000000).toString(16).substring(1));
 }
 
+app.get("/u/:shortURL", (req, res) => {
+  console.log(urlDatabase[req.params.shortURL]);
+  res.redirect(urlDatabase[req.params.shortURL]);
+});
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
