@@ -33,7 +33,13 @@ app.post("/urls", (req, res) => {
   console.log(shortUrl);
   console.log(req.body);
   console.log(urlDatabase);
-  res.redirect("/urls/" + shortUrl);         // Respond with 'Ok' (we will replace this)
+  res.redirect("/urls/" + shortUrl);
+});
+
+app.post("/urls/:id/delete", (req, res) => {
+  const urlToDelete = req.params.id;
+  delete urlDatabase[urlToDelete];
+  res.redirect("/urls");
 });
 
 var randomString = function generateRandomString() {
