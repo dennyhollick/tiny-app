@@ -21,6 +21,13 @@ app.post("/login", (req, res) => {
   res.redirect("/urls");
 });
 
+//Logout to clear the cookie info
+
+app.post("/logout", (req, res) => {
+  res.clearCookie('username');
+  res.redirect("/urls");
+});
+
 
 //Shows all of the URLs that have been created
 
