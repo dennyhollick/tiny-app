@@ -42,7 +42,12 @@ var randomString = function generateRandomString() {
 
 app.get("/u/:shortURL", (req, res) => {
   console.log(urlDatabase[req.params.shortURL]);
-  res.redirect(urlDatabase[req.params.shortURL]);
+  if (urlDatabase[req.params.shortURL]) {
+      res.redirect(urlDatabase[req.params.shortURL]);
+  } else {
+      res.statusCode = 404;
+      res.end("Error - Does not exist - Try a different URL or create a new one")
+  }
 });
 
 
