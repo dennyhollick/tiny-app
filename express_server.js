@@ -13,21 +13,38 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+//Applies uername info to cookie upon login
+
+app.post("/login", (req, res) => {
+  const username = req.body.username;
+  res.cookie('username', username);
+  res.redirect("/urls");
+});
+
+
+//Shows all of the URLs that have been created
+
 app.get("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase };
   res.render("urls_index", templateVars);
 });
+
+//Displays page to create a new URL
 
 app.get("/urls/new", (req, res) => {
   console.log(urlDatabase);
   res.render("urls_new");
 });
 
+//Displays the short and long URL for a specific URL specified in the path
+
 app.get("/urls/:id", (req, res) => {
   urlId = req.params.id;
   let templateVars = { shortURL: urlId, longURL: urlDatabase[urlId] };
   res.render("urls_show", templateVars);
 });
+
+//creates a new URL with a new shortlink. Works with /new
 
 app.post("/urls", (req, res) => {
   const shortUrl = randomString();
@@ -55,9 +72,13 @@ app.post("/urls/:id/update", (req, res) => {
   res.redirect("/urls");
 });
 
+//Generates a random short URL
+
 var randomString = function generateRandomString() {
   return (Math.floor((1 + Math.random()) * 0x1000000).toString(16).substring(1));
 }
+
+//Redirects to short URL if exists. Otherwise 404
 
 app.get("/u/:shortURL", (req, res) => {
   console.log(urlDatabase[req.params.shortURL]);
@@ -69,6 +90,7 @@ app.get("/u/:shortURL", (req, res) => {
   }
 });
 
+//initializes the server
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
