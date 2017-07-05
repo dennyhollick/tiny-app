@@ -1,7 +1,9 @@
-var express = require("express");
-var app = express();
-var PORT = process.env.PORT || 8080; // default port 8080
+const express = require("express");
+const app = express();
+const PORT = process.env.PORT || 8080; // default port 8080
+const bodyParser = require("body-parser");
 
+app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
 var urlDatabase = {
@@ -14,19 +16,28 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+app.get("/urls/new", (req, res) => {
+  console.log(urlDatabase);
+  res.render("urls_new");
+});
+
 app.get("/urls/:id", (req, res) => {
   urlId = req.params.id;
   let templateVars = { shortURL: urlId, longURL: urlDatabase[urlId] };
   res.render("urls_show", templateVars);
 });
 
-// app.get("/hello", (req, res) => {
-//   res.end("<html><body>Hello <b>World</b></body></html>\n");
-// });
+app.post("/urls", (req, res) => {
+  urlDatabase[randomString()] = req.body.longURL;
+  console.log(req.body);
+  console.log(urlDatabase);
+  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+});
 
-// app.get("/", (req, res) => {
-//   res.end("Hello!");
-// });
+var randomString = function generateRandomString() {
+  return Math.floor((1 + Math.random()) * 0x1000000).toString(16).substring(1);
+}
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
