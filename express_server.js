@@ -28,6 +28,13 @@ app.post("/logout", (req, res) => {
   res.redirect("/urls");
 });
 
+//Creates a new login with a password
+
+app.get("/register", (req, res) => {
+  let templateVars = { username: req.cookies["username"] };
+  res.render("register", templateVars);
+});
+
 
 //Shows all of the URLs that have been created
 
