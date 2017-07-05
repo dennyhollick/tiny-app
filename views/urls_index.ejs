@@ -4,9 +4,14 @@
   <% include ./partials/_header %>
 </head>
 <body>
-    <h1>Test</h1>
+    <h1>Tiny App URLs</h1>
 
-   <p> <%= JSON.stringify(urls) %></p>
+   <ul>
+    <% for (url in urls) { %>
+       <li> <%= url + " - " + urls[url] %></li>
+    <% } %>
+
+   </ul>
 
 </body>
 </html>
