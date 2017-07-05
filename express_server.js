@@ -28,14 +28,16 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  urlDatabase[randomString()] = req.body.longURL;
+  const shortUrl = randomString();
+  urlDatabase[shortUrl] = req.body.longURL;
+  console.log(shortUrl);
   console.log(req.body);
   console.log(urlDatabase);
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  res.redirect("/urls/" + shortUrl);         // Respond with 'Ok' (we will replace this)
 });
 
 var randomString = function generateRandomString() {
-  return Math.floor((1 + Math.random()) * 0x1000000).toString(16).substring(1);
+  return (Math.floor((1 + Math.random()) * 0x1000000).toString(16).substring(1));
 }
 
 
