@@ -25,14 +25,14 @@ app.post("/login", (req, res) => {
 //Shows all of the URLs that have been created
 
 app.get("/urls", (req, res) => {
-  let templateVars = { urls: urlDatabase };
+  let templateVars = { urls: urlDatabase, username: req.cookies["username"] };
   res.render("urls_index", templateVars);
 });
 
 //Displays page to create a new URL
 
 app.get("/urls/new", (req, res) => {
-  console.log(urlDatabase);
+  let templateVars = { urls: urlDatabase, username: req.cookies["username"] };
   res.render("urls_new");
 });
 
@@ -40,7 +40,7 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/urls/:id", (req, res) => {
   urlId = req.params.id;
-  let templateVars = { shortURL: urlId, longURL: urlDatabase[urlId] };
+  let templateVars = { shortURL: urlId, longURL: urlDatabase[urlId], username: req.cookies["username"] };
   res.render("urls_show", templateVars);
 });
 
@@ -83,10 +83,10 @@ var randomString = function generateRandomString() {
 app.get("/u/:shortURL", (req, res) => {
   console.log(urlDatabase[req.params.shortURL]);
   if (urlDatabase[req.params.shortURL]) {
-      res.redirect(urlDatabase[req.params.shortURL]);
+    res.redirect(urlDatabase[req.params.shortURL]);
   } else {
-      res.statusCode = 404;
-      res.end("Error - Does not exist - Try a different URL or create a new one")
+    res.statusCode = 404;
+    res.end("Error - Does not exist - Try a different URL or create a new one")
   }
 });
 
