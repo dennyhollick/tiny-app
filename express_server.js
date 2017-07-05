@@ -13,6 +13,19 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+  "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+};
+
 //Applies uername info to cookie upon login
 
 app.post("/login", (req, res) => {
@@ -35,6 +48,24 @@ app.get("/register", (req, res) => {
   res.render("register", templateVars);
 });
 
+app.post("/register", (req, res) => {
+  const userId = randomString();
+  
+  if (req.body.email && req.body.password) {
+    users[userId] = {
+      id: userId,
+      email: req.body.email,
+      password: req.body.password
+    };
+    // console.log(users.userID);
+    console.log(users);
+    res.cookie('username', req.body.email);
+    res.redirect("/urls");
+  } else {
+    res.statusCode = 404;
+    res.end("Error: Enter a valid email and password");
+  }
+});
 
 //Shows all of the URLs that have been created
 
@@ -100,7 +131,7 @@ app.get("/u/:shortURL", (req, res) => {
     res.redirect(urlDatabase[req.params.shortURL]);
   } else {
     res.statusCode = 404;
-    res.end("Error - Does not exist - Try a different URL or create a new one")
+    res.end("Error - Does not exist - Try a different URL or create a new one");
   }
 });
 
