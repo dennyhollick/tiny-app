@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
-const cookieParser = require('cookie-parser')
-const PORT = process.env.PORT || 8080; // default port 8080
+const cookieParser = require('cookie-parser');
+const PORT = process.env.PORT || 8080;
 const bodyParser = require("body-parser");
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -51,11 +51,11 @@ app.post("/login", (req, res) => {
       res.redirect('/urls');
     } else {
       res.statusCode = 403;
-      res.send('password is incorrect')
+      res.send('password is incorrect');
     }
   } else {
     res.statusCode = 403;
-    res.send('the username does not exist')
+    res.send('the username does not exist');
   }
 });
 
@@ -129,7 +129,7 @@ app.get("/urls/:id", (req, res) => {
     res.render("urls_show", templateVars);
   } else {
     res.statusCode = 401;
-    res.send('You are not authorized to view this URL. Please login.')
+    res.send('You are not authorized to view this URL. Please login.');
   }
 });
 
@@ -139,7 +139,7 @@ app.post("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase, user: req.cookies["user"] };
   const currentUser = getCurrentUser(req.cookies["user"]);
   const shortUrl = randomString();
-  urlDatabase[shortUrl] = {longUrl: req.body.longURL, owner: currentUser }
+  urlDatabase[shortUrl] = {longUrl: req.body.longURL, owner: currentUser };
   console.log(shortUrl);
   console.log(req.body);
   console.log(urlDatabase);
@@ -152,12 +152,12 @@ app.post("/urls/:id/delete", (req, res) => {
   let templateVars = { urls: urlDatabase, user: req.cookies["user"] };
   const urlToDelete = req.params.id;
   const currentUser = getCurrentUser(req.cookies["user"]);
-  if ( isAuthorizedtoChange(currentUser, urlToDelete)) { 
+  if ( isAuthorizedtoChange(currentUser, urlToDelete)) {
     delete urlDatabase[urlToDelete];
     res.redirect("/urls");
   } else {
     res.statusCode = 401;
-    res.send("You are not authorized to delete this URL. Please Login.")
+    res.send("You are not authorized to delete this URL. Please Login.");
   }
 });
 
@@ -183,7 +183,7 @@ app.post("/urls/:id/update", (req, res) => {
 
 var randomString = function generateRandomString() {
   return (Math.floor((1 + Math.random()) * 0x1000000).toString(16).substring(1));
-}
+};
 
 //Redirects to short URL if exists. Otherwise 404
 
