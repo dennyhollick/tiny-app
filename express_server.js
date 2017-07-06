@@ -108,7 +108,11 @@ app.get("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   let templateVars = { urls: urlDatabase, user: req.cookies["user"] };
-  res.render("urls_new", templateVars);
+  if (req.cookies["user"]) {
+    res.render("urls_new", templateVars);
+  } else {
+    res.redirect("/login");
+  }
 });
 
 //Page displays the short and long URL for a specific URL specified in the path
