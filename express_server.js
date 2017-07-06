@@ -57,7 +57,7 @@ app.post("/login", (req, res) => {
     res.statusCode = 400;
     res.send('the username does not exist')
   }
-  res.redirect("/urls");
+  // res.redirect("/urls");
 });
 
 //Logout to clear the cookie info
