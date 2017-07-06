@@ -55,7 +55,7 @@ app.post("/register", (req, res) => {
   
   if (req.body.email && req.body.password) {
     if (doesEmailExist(req.body.email)) {
-      res.statusCode = 404;
+      res.statusCode = 400;
       res.end("Email already exists as a user. Please login with your email and password.");
     } else {
       users[userId] = {
@@ -67,7 +67,7 @@ app.post("/register", (req, res) => {
       res.redirect("/urls");
     }
   } else {
-    res.statusCode = 404;
+    res.statusCode = 400;
     res.end("Error: Enter a valid email and password");
   }
 });
