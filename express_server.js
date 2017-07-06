@@ -26,25 +26,25 @@ const users = {
   }
 };
 
-//Applies uername info to cookie upon login
+//Applies userId info to cookie upon login
 
 app.post("/login", (req, res) => {
-  const username = req.body.username;
-  res.cookie('username', username);
+  const userId = req.body.userId;
+  res.cookie('userId', userId);
   res.redirect("/urls");
 });
 
 //Logout to clear the cookie info
 
 app.post("/logout", (req, res) => {
-  res.clearCookie('username');
+  res.clearCookie('userId');
   res.redirect("/urls");
 });
 
 //Page to create a new login
 
 app.get("/register", (req, res) => {
-  let templateVars = { username: req.cookies["username"] };
+  let templateVars = { userId: req.cookies["userId"] };
   res.render("register", templateVars);
 });
 
@@ -63,7 +63,7 @@ app.post("/register", (req, res) => {
         email: req.body.email,
         password: req.body.password
       };
-      res.cookie('username', req.body.email);
+      res.cookie('userId', userId);
       res.redirect("/urls");
     }
   } else {
@@ -75,22 +75,22 @@ app.post("/register", (req, res) => {
 //Page shows all of the URLs that have been created
 
 app.get("/urls", (req, res) => {
-  let templateVars = { urls: urlDatabase, username: req.cookies["username"] };
+  let templateVars = { urls: urlDatabase, userId: req.cookies["userId"] };
   res.render("urls_index", templateVars);
 });
 
 //Page displated to create a new URL
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = { urls: urlDatabase, username: req.cookies["username"] };
-  res.render("urls_new");
+  let templateVars = { urls: urlDatabase, userId: req.cookies["userId"] };
+  res.render("urls_new", templateVars);
 });
 
 //Page displays the short and long URL for a specific URL specified in the path
 
 app.get("/urls/:id", (req, res) => {
   urlId = req.params.id;
-  let templateVars = { shortURL: urlId, longURL: urlDatabase[urlId], username: req.cookies["username"] };
+  let templateVars = { shortURL: urlId, longURL: urlDatabase[urlId], userId: req.cookies["userId"] };
   res.render("urls_show", templateVars);
 });
 
