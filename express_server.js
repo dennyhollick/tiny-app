@@ -101,7 +101,11 @@ app.post("/register", (req, res) => {
 
 app.get("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase, user: req.cookies["user"] };
-  res.render("urls_index", templateVars);
+  if (req.cookies["user"]) {
+    res.render("urls_index", templateVars);
+  } else {
+    res.redirect("/login");
+  }
 });
 
 //Page displated to create a new URL
