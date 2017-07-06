@@ -139,9 +139,16 @@ app.post("/urls", (req, res) => {
 //To delete a URL
 
 app.post("/urls/:id/delete", (req, res) => {
+  let templateVars = { urls: urlDatabase, user: req.cookies["user"] };
   const urlToDelete = req.params.id;
-  delete urlDatabase[urlToDelete];
-  res.redirect("/urls");
+  const currentUser = getCurrentUser(req.cookies["user"]);
+  if ( isAuthorizedtoChange(currentUser, urlToDelete)) { 
+    delete urlDatabase[urlToDelete];
+    res.redirect("/urls");
+  } else {
+    res.statusCode = 401;
+    res.send("You are not authorized to delete this URL. Please Login.")
+  }
 });
 
 //To update a URL
