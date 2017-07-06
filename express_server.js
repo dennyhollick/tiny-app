@@ -122,9 +122,15 @@ app.get("/urls/new", (req, res) => {
 //Page displays the short and long URL for a specific URL specified in the path
 
 app.get("/urls/:id", (req, res) => {
-  urlId = req.params.id;
+  let urlId = req.params.id;
   let templateVars = { shortURL: urlId, longURL: urlDatabase[urlId].longUrl, user: req.cookies["user"] };
-  res.render("urls_show", templateVars);
+  const currentUser = getCurrentUser(req.cookies["user"]);
+  if (isAuthorizedtoChange(currentUser, urlId)) {
+    res.render("urls_show", templateVars);
+  } else {
+    res.statusCode = 401;
+    res.send('You are not authorized to view this URL. Please login.')
+  }
 });
 
 //creates a new URL with a new shortlink. Works with /new
@@ -162,9 +168,6 @@ app.post("/urls/:id/update", (req, res) => {
   const shortUrlToUpdate = req.params.id;
   const updatedLongURL = req.body.longURL;
   const currentUser = getCurrentUser(req.cookies["user"]);
-
-  //checks to see if there is a cookie. If so, sets currentUser
-
 
   //checks if there is a cookie, and if user is authorized to update URL.
   if ( isAuthorizedtoChange(currentUser, shortUrlToUpdate)) {
