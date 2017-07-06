@@ -8,8 +8,9 @@
 
    <ul>
     <% for (url in urls) { %>
-       <li> <%= url + " - " + urls[url] %> <a href ="/urls/<%= url %>">Update</a><form method="POST" action="/urls/<%= url %>/delete"> <input type="submit" value="Delete"></form></li>
-    <% } %>
+        <% if (user && urls[url].owner === JSON.parse(user).id) { %>
+       <li> <%= url + " - " + urls[url].longUrl %> <a href ="/urls/<%= url %>">Update</a><form method="POST" action="/urls/<%= url %>/delete"> <input type="submit" value="Delete"></form></li>
+    <% }} %>
 
    </ul>
 

@@ -9,8 +9,8 @@ app.set("view engine", "ejs");
 app.use(cookieParser());
 
 var urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": {longUrl: "http://www.lighthouselabs.ca", owner: "test" },
+  "9sm5xK": {longUrl: "http://www.google.com", owner: "test"}
 };
 
 const users = {
@@ -39,7 +39,7 @@ app.get("/login", (req, res) => {
   res.render("login", templateVars);
 });
 
-//Applies userId info to cookie upon login
+//Applies user info to cookie upon login
 
 app.post("/login", (req, res) => {
   const email = req.body.email;
@@ -69,7 +69,7 @@ app.post("/logout", (req, res) => {
 //Page to create a new login
 
 app.get("/register", (req, res) => {
-  let templateVars = { userId: req.cookies["user"] };
+  let templateVars = { user: req.cookies["user"] };
   res.render("register", templateVars);
 });
 
@@ -119,15 +119,17 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/urls/:id", (req, res) => {
   urlId = req.params.id;
-  let templateVars = { shortURL: urlId, longURL: urlDatabase[urlId], user: req.cookies["user"] };
+  let templateVars = { shortURL: urlId, longURL: urlDatabase[urlId].longUrl, user: req.cookies["user"] };
   res.render("urls_show", templateVars);
 });
 
 //creates a new URL with a new shortlink. Works with /new
 
 app.post("/urls", (req, res) => {
+  let templateVars = { urls: urlDatabase, user: req.cookies["user"] };
+  const currentUser = getCurrentUser(req.cookies["user"])
   const shortUrl = randomString();
-  urlDatabase[shortUrl] = req.body.longURL;
+  urlDatabase[shortUrl] = {longUrl: req.body.longURL, owner: currentUser }
   console.log(shortUrl);
   console.log(req.body);
   console.log(urlDatabase);
@@ -145,10 +147,24 @@ app.post("/urls/:id/delete", (req, res) => {
 //To update a URL
 
 app.post("/urls/:id/update", (req, res) => {
-  const urlToUpdate = req.params.id;
+  let templateVars = { urls: urlDatabase, user: req.cookies["user"] };
+  const shortUrlToUpdate = req.params.id;
   const updatedLongURL = req.body.longURL;
-  urlDatabase[urlToUpdate] = updatedLongURL;
-  res.redirect("/urls");
+  let currentUser;
+
+  //checks to see if there is a cookie. If so, sets currentUser
+  if (req.cookies["user"]) {
+    currentUser = JSON.parse(req.cookies["user"]).id;
+  }
+
+  //checks if there is a cookie, and if user is authorized to update URL.
+  if ( isAuthorizedtoChange(currentUser, shortUrlToUpdate)) {
+    urlDatabase[shortUrlToUpdate].longUrl = updatedLongURL;
+    res.redirect("/urls");
+  } else {
+    res.statusCode = 401;
+    res.end("You are not authorized to edit this URL. Please login if you own it.");
+  }
 });
 
 //Generates a random short URL
@@ -178,6 +194,17 @@ function doesEmailExist (emailInput) {
       return user;
     }
   }
+}
+
+function isAuthorizedtoChange (currentUser, shortUrlToUpdate) {
+  const urlOwner = urlDatabase[shortUrlToUpdate].owner;
+  if (currentUser === urlOwner) {
+    return true;
+  }
+}
+
+function getCurrentUser (cookie) {
+  return JSON.parse(cookie).id;
 }
 
 //initializes the server
