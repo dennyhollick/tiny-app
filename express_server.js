@@ -26,11 +26,32 @@ const users = {
   }
 };
 
+
+//Serves the login page when requested
+
+app.get("/login", (req, res) => {
+  let templateVars = { userId: req.cookies["userId"] };
+  res.render("login", templateVars);
+});
+
 //Applies userId info to cookie upon login
 
 app.post("/login", (req, res) => {
-  const userId = req.body.userId;
-  res.cookie('userId', userId);
+  const email = req.body.email;
+  const password = req.body.password;
+  const userId = doesEmailExist(email);
+  if (userId){
+    if(users[userId].password === password ){
+      res.cookie('userId', userId);
+      res.redirect('/urls');
+    } else {
+      res.statusCode = 400;
+      res.send('password is incorrect')
+    }
+  } else {
+    res.statusCode = 400;
+    res.send('the username does not exist')
+  }
   res.redirect("/urls");
 });
 
@@ -146,7 +167,7 @@ function doesEmailExist (emailInput) {
   console.log(emailInput);
   for (const user in users) {
     if (emailInput === users[user].email){
-      return true;
+      return user;
     }
   }
 }
