@@ -41,47 +41,52 @@ app.post("/logout", (req, res) => {
   res.redirect("/urls");
 });
 
-//Creates a new login with a password
+//Page to create a new login
 
 app.get("/register", (req, res) => {
   let templateVars = { username: req.cookies["username"] };
   res.render("register", templateVars);
 });
 
+//Creates a new user. Compares it to database first to make sure it doesn't exit and user inputs are valid.
+
 app.post("/register", (req, res) => {
   const userId = randomString();
   
   if (req.body.email && req.body.password) {
-    users[userId] = {
-      id: userId,
-      email: req.body.email,
-      password: req.body.password
-    };
-    // console.log(users.userID);
-    console.log(users);
-    res.cookie('username', req.body.email);
-    res.redirect("/urls");
+    if (doesEmailExist(req.body.email)) {
+      res.statusCode = 404;
+      res.end("Email already exists as a user. Please login with your email and password.");
+    } else {
+      users[userId] = {
+        id: userId,
+        email: req.body.email,
+        password: req.body.password
+      };
+      res.cookie('username', req.body.email);
+      res.redirect("/urls");
+    }
   } else {
     res.statusCode = 404;
     res.end("Error: Enter a valid email and password");
   }
 });
 
-//Shows all of the URLs that have been created
+//Page shows all of the URLs that have been created
 
 app.get("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase, username: req.cookies["username"] };
   res.render("urls_index", templateVars);
 });
 
-//Displays page to create a new URL
+//Page displated to create a new URL
 
 app.get("/urls/new", (req, res) => {
   let templateVars = { urls: urlDatabase, username: req.cookies["username"] };
   res.render("urls_new");
 });
 
-//Displays the short and long URL for a specific URL specified in the path
+//Page displays the short and long URL for a specific URL specified in the path
 
 app.get("/urls/:id", (req, res) => {
   urlId = req.params.id;
@@ -134,6 +139,17 @@ app.get("/u/:shortURL", (req, res) => {
     res.end("Error - Does not exist - Try a different URL or create a new one");
   }
 });
+
+//function will look through users and check if email already exists in database
+
+function doesEmailExist (emailInput) {
+  console.log(emailInput);
+  for (const user in users) {
+    if (emailInput === users[user].email){
+      return true;
+    }
+  }
+}
 
 //initializes the server
 
