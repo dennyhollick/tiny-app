@@ -188,9 +188,9 @@ var randomString = function generateRandomString() {
 //Redirects to short URL if exists. Otherwise 404
 
 app.get("/u/:shortURL", (req, res) => {
-  console.log(urlDatabase[req.params.shortURL]);
-  if (urlDatabase[req.params.shortURL]) {
-    res.redirect(urlDatabase[req.params.shortURL]);
+  console.log(urlDatabase[req.params.shortURL].longUrl);
+  if (urlDatabase[req.params.shortURL].longUrl) {
+    res.redirect(urlDatabase[req.params.shortURL].longUrl);
   } else {
     res.statusCode = 404;
     res.end("Error - Does not exist - Try a different URL or create a new one");
