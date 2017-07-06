@@ -127,7 +127,7 @@ app.get("/urls/:id", (req, res) => {
 
 app.post("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase, user: req.cookies["user"] };
-  const currentUser = getCurrentUser(req.cookies["user"])
+  const currentUser = getCurrentUser(req.cookies["user"]);
   const shortUrl = randomString();
   urlDatabase[shortUrl] = {longUrl: req.body.longURL, owner: currentUser }
   console.log(shortUrl);
@@ -150,12 +150,10 @@ app.post("/urls/:id/update", (req, res) => {
   let templateVars = { urls: urlDatabase, user: req.cookies["user"] };
   const shortUrlToUpdate = req.params.id;
   const updatedLongURL = req.body.longURL;
-  let currentUser;
+  const currentUser = getCurrentUser(req.cookies["user"]);
 
   //checks to see if there is a cookie. If so, sets currentUser
-  if (req.cookies["user"]) {
-    currentUser = JSON.parse(req.cookies["user"]).id;
-  }
+
 
   //checks if there is a cookie, and if user is authorized to update URL.
   if ( isAuthorizedtoChange(currentUser, shortUrlToUpdate)) {
@@ -204,7 +202,11 @@ function isAuthorizedtoChange (currentUser, shortUrlToUpdate) {
 }
 
 function getCurrentUser (cookie) {
-  return JSON.parse(cookie).id;
+  if (cookie) {
+    return JSON.parse(cookie).id;
+  } else {
+    return "";
+  }
 }
 
 //initializes the server
