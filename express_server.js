@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt');
 const PORT = process.env.PORT || 8080;
 const bodyParser = require("body-parser");
 
@@ -17,17 +18,17 @@ const users = {
   "userRandomID": {
     id: "userRandomID",
     email: "user@example.com",
-    password: "purple-monkey-dinosaur"
+    password: "$2a$10$9.nTnJJZnLkOgANgHhA3Fe6drPJ6QSQLgzyG7419TpSCrXT3JHr7m"
   },
   "user2RandomID": {
     id: "user2RandomID",
     email: "user2@example.com",
-    password: "dishwasher-funk"
+    password: "$2a$10$buTZmDHuKnDhRKPo8gGkB.L.HUkpHX6mevkj/yLTYHtDRv1d.w8Ni"
   },
   "test": {
     id: "test",
     email: "test@test.com",
-    password: "test"
+    password: "$2a$10$vE5iKdOmE/m4Jd/JvqyyxuJQvjZj8IZwdntz1T.LRjhx4//aSP79W"
   }
 };
 
@@ -46,7 +47,7 @@ app.post("/login", (req, res) => {
   const password = req.body.password;
   const userId = doesEmailExist(email);
   if (userId){
-    if(users[userId].password === password ){
+    if(bcrypt.compareSync(password, users[userId].password)) {
       res.cookie('user', JSON.stringify(users[userId]));
       res.redirect('/urls');
     } else {
@@ -86,8 +87,9 @@ app.post("/register", (req, res) => {
       users[userId] = {
         id: userId,
         email: req.body.email,
-        password: req.body.password
+        password: bcrypt.hashSync(req.body.password, 10)
       };
+      console.log(users[userId]);
       res.cookie('user', JSON.stringify(users[userId]));
       res.redirect("/urls");
     }
