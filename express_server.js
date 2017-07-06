@@ -50,14 +50,13 @@ app.post("/login", (req, res) => {
       res.cookie('user', JSON.stringify(users[userId]));
       res.redirect('/urls');
     } else {
-      res.statusCode = 400;
+      res.statusCode = 403;
       res.send('password is incorrect')
     }
   } else {
-    res.statusCode = 400;
+    res.statusCode = 403;
     res.send('the username does not exist')
   }
-  // res.redirect("/urls");
 });
 
 //Logout to clear the cookie info
