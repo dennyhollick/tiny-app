@@ -1,17 +1,12 @@
 <title>Tiny URL</title>
 
-<% if (userId) { %>
+<% if (user) { %>
 
-<p>Welcome <%= userId %>!</p>
+<p>Welcome <%= user %>!</p>
 <form action="/logout" method="POST">
       <input type="submit" value="Logout">
 </form>
 
 <% } else { %>
-
-      <form action="/login" method="POST">
-      <label for="userId">Enter a userId:</label>
-      <input id="userId" type="text" name="userId" style="width: 300px">
-      <input type="submit" value="Submit">
-      </form>
+    <a href="/login">Login</a> OR <a href="/register">Register</a>
 <% } %>
