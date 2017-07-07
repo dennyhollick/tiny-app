@@ -1,24 +1,24 @@
-//TODO: Change header to display email instead of userid
-//TODO: If user is not logged in, header should display Register/Login buttons
-//TODO: If user goes to /, redirects to /urls (if not logged in, goes to login)
-//TODO: Remove JS code from index and move to express_server
-//TODO: Add a: create a new link button to /urls
-//TODO: Redirect /urls to login if not logged in and display error msg
-//TODO: /login If user is logged in, redirect to /urls
-//TODO: /register If user is logged in, redirect to /urls
-//TODO: Clean up comments
-//TODO: Remove console.logs
-//TODO: Refactor and clean where possible, ES LINT
-//TODO: Final code review
+//TODO: [X] Change header to display email instead of userid
+//TODO: [X] If user is not logged in, header should display Register/Login buttons
+//TODO: [ ] If user goes to /, redirects to /urls (if not logged in, goes to login)
+//TODO: [ ] Remove JS code from index and move to express_server
+//TODO: [ ] Add a: create a new link button to /urls
+//TODO: [ ] Redirect /urls to login if not logged in and display error msg
+//TODO: [ ] /login If user is logged in, redirect to /urls
+//TODO: [ ] /register If user is logged in, redirect to /urls
+//TODO: [ ] Clean up comments
+//TODO: [ ] Remove console.logs
+//TODO: [ ] Refactor and clean where possible, ES LINT
+//TODO: [ ] Final code review
 
-//TEST: Test if no cookie is present
-//TEST: Test if short URL is incorrect
-//TEST: /url/:id returns error if does not exist
+//TEST: [ ] Test if no cookie is present
+//TEST: [ ] Test if short URL is incorrect
+//TEST: [ ] /url/:id returns error if does not exist
 
-//STRETCH: /url & /url:id displays Date url was created
-//STRETCH: /url & /url:id displays number of times URL visited
-//STRETCH: /url & /url:id displays number of unique visits
-//STRETCH: Make me pretty.
+//STRETCH: [ ] /url & /url:id displays Date url was created
+//STRETCH: [ ] /url & /url:id displays number of times URL visited
+//STRETCH: [ ] /url & /url:id displays number of unique visits
+//STRETCH: [ ] Make me pretty.
 
 
 const express = require("express");
@@ -31,7 +31,6 @@ var cookieSession = require('cookie-session');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
-//app.use(cookieParser());
 app.use(cookieSession({
   name: 'session',
   keys: ['iamcornholio'],
@@ -60,6 +59,11 @@ const users = {
     password: "$2a$10$vE5iKdOmE/m4Jd/JvqyyxuJQvjZj8IZwdntz1T.LRjhx4//aSP79W"
   }
 };
+
+
+app.get("/", (req, res) => {
+  res.redirect("/urls");
+});
 
 
 //Serves the login page when requested
