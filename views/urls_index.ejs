@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <% include ./partials/_header %>
-</head>
-<body>
-    <h1>Tiny App URLs</h1>
-    <a href="/urls/new">Create New Link</a>
-    <ul>
+  </head>
+    <body>
+      <h1>Tiny App URLs</h1>
+      <a href="/urls/new">Create New Link</a>
+      <ul>
         <% for (url in urls) { %>
-            <li>
-                <%= url + " - " + urls[url].longUrl %>
-                <a href="/urls/<%= url %>">Update</a>
-                <form method="POST" action="/urls/<%= url %>/delete">
-                    <input type="submit" value="Delete">
-                </form>
-            </li>
+          <li>
+            <%= url + " - " + urls[url].longUrl %>
+            <a href="/urls/<%= url %>">Update</a>
+            <form method="POST" action="/urls/<%= url %>/delete">
+              <input type="submit" value="Delete">
+            </form>
+          </li>
         <% } %>
-   </ul>
-</body>
+      </ul>
+    </body>
 </html>

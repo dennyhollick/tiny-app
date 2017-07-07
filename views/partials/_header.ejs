@@ -4,9 +4,9 @@
 
 <p>Welcome <%= email %>!</p>
 <form action="/logout" method="POST">
-      <input type="submit" value="Logout">
+  <input type="submit" value="Logout">
 </form>
 
 <% } else { %>
-    <a href="/login">Login</a> OR <a href="/register">Register</a>
+  <a href="/login">Login</a> OR <a href="/register">Register</a>
 <% } %>

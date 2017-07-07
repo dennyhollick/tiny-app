@@ -121,8 +121,8 @@ app.get("/", (req, res) => {
 //LOGIN
 
 app.get("/login", (req, res) => {
-  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
-  if (!req.session.user_id){
+  let templateVars = { urls: urlDatabase, user: req.session.userID, email: users[req.session.userID] ? users[req.session.userID].email : null };
+  if (!req.session.userID){
     res.render("login", templateVars);
   } else {
     res.redirect("/urls");
@@ -135,7 +135,7 @@ app.post("/login", (req, res) => {
   const userId = doesEmailExist(email);
   if (userId){
     if (bcrypt.compareSync(password, users[userId].password)) {
-      req.session.user_id = users[userId].id;
+      req.session.userID = users[userId].id;
       res.redirect('/urls');
     } else {
       res.statusCode = 403;
@@ -157,8 +157,8 @@ app.post("/logout", (req, res) => {
 //REGISTER
 
 app.get("/register", (req, res) => {
-  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
-  if (!req.session.user_id){
+  let templateVars = { urls: urlDatabase, user: req.session.userID, email: users[req.session.userID] ? users[req.session.userID].email : null };
+  if (!req.session.userID){
     res.render("register", templateVars);
   } else {
     res.redirect("/urls");
@@ -178,7 +178,7 @@ app.post("/register", (req, res) => {
         email: req.body.email,
         password: bcrypt.hashSync(req.body.password, 10)
       };
-      req.session.user_id = users[userId].id;
+      req.session.userID = users[userId].id;
       res.redirect("/urls");
     }
   } else {
@@ -190,9 +190,9 @@ app.post("/register", (req, res) => {
 //INDEX
 
 app.get("/urls", (req, res) => {
-  let userUrls = returnUrlListForUser(req.session.user_id);
-  let templateVars = { urls: userUrls, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
-  if (req.session.user_id) {
+  let userUrls = returnUrlListForUser(req.session.userID);
+  let templateVars = { urls: userUrls, user: req.session.userID, email: users[req.session.userID] ? users[req.session.userID].email : null };
+  if (req.session.userID) {
     res.render("urls_index", templateVars);
   } else {
     res.redirect("/login");
@@ -202,8 +202,8 @@ app.get("/urls", (req, res) => {
 //NEW URL
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
-  if (req.session.user_id) {
+  let templateVars = { urls: urlDatabase, user: req.session.userID, email: users[req.session.userID] ? users[req.session.userID].email : null };
+  if (req.session.userID) {
     res.render("urls_new", templateVars);
   } else {
     res.redirect("/login");
@@ -211,8 +211,8 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
-  const currentUser = req.session.user_id;
+  let templateVars = { urls: urlDatabase, user: req.session.userID, email: users[req.session.userID] ? users[req.session.userID].email : null };
+  const currentUser = req.session.userID;
   const shortUrl = randomString();
   const longURL = fixURL(req.body.longURL);
   urlDatabase[shortUrl] = {longUrl: longURL, owner: currentUser };
@@ -223,11 +223,11 @@ app.post("/urls", (req, res) => {
 
 app.get("/urls/:id", (req, res) => {
   let urlId = req.params.id;
-  const currentUser = req.session.user_id;
+  const currentUser = req.session.userID;
   if (doesShortURLExist(urlId)) {
     if (isAuthorizedtoChange(currentUser, urlId)) {
       let longURL = urlDatabase[urlId].longUrl;
-      let templateVars = { shortURL: urlId, longURL: longURL, urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
+      let templateVars = { shortURL: urlId, longURL: longURL, urls: urlDatabase, user: req.session.userID, email: users[req.session.userID] ? users[req.session.userID].email : null };
       res.render("urls_show", templateVars);
     } else {
       res.statusCode = 401;
@@ -240,10 +240,10 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.post("/urls/:id/update", (req, res) => {
-  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
+  let templateVars = { urls: urlDatabase, user: req.session.userID, email: users[req.session.userID] ? users[req.session.userID].email : null };
   const shortUrlToUpdate = req.params.id;
   const updatedLongURL = fixURL(req.body.longURL);
-  const currentUser = req.session.user_id;
+  const currentUser = req.session.userID;
   if ( isAuthorizedtoChange(currentUser, shortUrlToUpdate)) {
     urlDatabase[shortUrlToUpdate].longUrl = updatedLongURL;
     res.redirect("/urls");
@@ -257,9 +257,9 @@ app.post("/urls/:id/update", (req, res) => {
 //DELETE
 
 app.post("/urls/:id/delete", (req, res) => {
-  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
+  let templateVars = { urls: urlDatabase, user: req.session.userID, email: users[req.session.userID] ? users[req.session.userID].email : null };
   const urlToDelete = req.params.id;
-  const currentUser = req.session.user_id;
+  const currentUser = req.session.userID;
   if ( isAuthorizedtoChange(currentUser, urlToDelete)) {
     delete urlDatabase[urlToDelete];
     res.redirect("/urls");
