@@ -1,7 +1,7 @@
 //TODO: [X] Change header to display email instead of userid
 //TODO: [X] If user is not logged in, header should display Register/Login buttons
-//TODO: [ ] If user goes to /, redirects to /urls (if not logged in, goes to login)
-//TODO: [ ] Remove JS code from index and move to express_server
+//TODO: [X] If user goes to /, redirects to /urls (if not logged in, goes to login)
+//TODO: [X] Remove JS code from index and move to express_server
 //TODO: [ ] Add a: create a new link button to /urls
 //TODO: [ ] Redirect /urls to login if not logged in and display error msg
 //TODO: [ ] /login If user is logged in, redirect to /urls
@@ -136,8 +136,9 @@ app.post("/register", (req, res) => {
 //Page shows all of the URLs that have been created
 
 app.get("/urls", (req, res) => {
-  // TODO: filter out urls that aren't mine HERE, rather than in the view
-  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
+  let userUrls = returnUrlListForUser(req.session.user_id);
+  let templateVars = { urls: userUrls, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
+  console.log(userUrls);
   if (req.session.user_id) {
     res.render("urls_index", templateVars);
   } else {
@@ -273,6 +274,16 @@ function fixURL (url) {
   } else {
     return url;
   }
+}
+
+function returnUrlListForUser (user) {
+  let userUrls = {};
+  for(url in urlDatabase) {
+    if (urlDatabase[url].owner === user ){
+      userUrls[url] = urlDatabase[url] ;
+    }
+  }
+  return userUrls;
 }
 
 //initializes the server

@@ -7,15 +7,13 @@
     <h1>Tiny App URLs</h1>
     <ul>
         <% for (url in urls) { %>
-            <% if (user && urls[url].owner === user) { %>
-                <li>
-                    <%= url + " - " + urls[url].longUrl %>
-                    <a href="/urls/<%= url %>">Update</a>
-                    <form method="POST" action="/urls/<%= url %>/delete">
-                        <input type="submit" value="Delete">
-                    </form>
-                </li>
-            <% } %>
+            <li>
+                <%= url + " - " + urls[url].longUrl %>
+                <a href="/urls/<%= url %>">Update</a>
+                <form method="POST" action="/urls/<%= url %>/delete">
+                    <input type="submit" value="Delete">
+                </form>
+            </li>
         <% } %>
    </ul>
 </body>
