@@ -65,7 +65,7 @@ const users = {
 //Serves the login page when requested
 
 app.get("/login", (req, res) => {
-  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id].email };
+  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
   res.render("login", templateVars);
 });
 
@@ -100,7 +100,7 @@ app.post("/logout", (req, res) => {
 //Page to create a new login
 
 app.get("/register", (req, res) => {
-  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id].email };
+  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
   res.render("register", templateVars);
 });
 
@@ -133,7 +133,7 @@ app.post("/register", (req, res) => {
 
 app.get("/urls", (req, res) => {
   // TODO: filter out urls that aren't mine HERE, rather than in the view
-  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id].email };
+  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
   if (req.session.user_id) {
     res.render("urls_index", templateVars);
   } else {
@@ -144,7 +144,7 @@ app.get("/urls", (req, res) => {
 //Page displated to create a new URL
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id].email };
+  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
   if (req.session.user_id) {
     res.render("urls_new", templateVars);
   } else {
@@ -160,7 +160,7 @@ app.get("/urls/:id", (req, res) => {
   if (doesShortURLExist(urlId)) {
     if (isAuthorizedtoChange(currentUser, urlId)) {
       let longURL = urlDatabase[urlId].longUrl
-      let templateVars = { shortURL: urlId, longURL: longURL, user: req.session.user_id, email: users[req.session.user_id].email };
+      let templateVars = { shortURL: urlId, longURL: longURL, urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
       res.render("urls_show", templateVars);
     } else {
       res.statusCode = 401;
@@ -175,7 +175,7 @@ app.get("/urls/:id", (req, res) => {
 //creates a new URL with a new shortlink. Works with /new
 
 app.post("/urls", (req, res) => {
-  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id].email };
+  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
   const currentUser = req.session.user_id;
   const shortUrl = randomString();
   const longURL = fixURL(req.body.longURL);
@@ -189,7 +189,7 @@ app.post("/urls", (req, res) => {
 //To delete a URL
 
 app.post("/urls/:id/delete", (req, res) => {
-  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id].email };
+  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
   const urlToDelete = req.params.id;
   const currentUser = req.session.user_id;
   if ( isAuthorizedtoChange(currentUser, urlToDelete)) {
@@ -204,7 +204,7 @@ app.post("/urls/:id/delete", (req, res) => {
 //To update a URL
 
 app.post("/urls/:id/update", (req, res) => {
-  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id].email };
+  let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
   const shortUrlToUpdate = req.params.id;
   const updatedLongURL = fixURL(req.body.longURL);
   const currentUser = req.session.user_id;
