@@ -8,12 +8,12 @@
 //TODO: [X] /register If user is logged in, redirect to /urls
 //TODO: [X] Clean up comments
 //TODO: [X] Remove console.logs
-//TODO: [ ] Refactor and clean where possible, ES LINT
+//TODO: [X] Refactor and clean where possible, ES LINT
 //TODO: [ ] Final code review
 
-//TEST: [ ] Test if no cookie is present
-//TEST: [ ] Test if short URL is incorrect
-//TEST: [ ] /url/:id returns error if does not exist
+//TEST: [X] Test if no cookie is present
+//TEST: [X] Test if short URL is incorrect
+//TEST: [X] /url/:id returns error if does not exist
 
 //STRETCH: [ ] /url & /url:id displays Date url was created
 //STRETCH: [ ] /url & /url:id displays number of times URL visited
@@ -124,6 +124,9 @@ app.get("/login", (req, res) => {
   let templateVars = { urls: urlDatabase, user: req.session.userID, email: users[req.session.userID] ? users[req.session.userID].email : null };
   if (!req.session.userID){
     res.render("login", templateVars);
+  } else if (!(users[req.session.userID] ? users[req.session.userID].email : null)) {
+    req.session = null;
+    res.redirect("/register");
   } else {
     res.redirect("/urls");
   }
@@ -192,7 +195,7 @@ app.post("/register", (req, res) => {
 app.get("/urls", (req, res) => {
   let userUrls = returnUrlListForUser(req.session.userID);
   let templateVars = { urls: userUrls, user: req.session.userID, email: users[req.session.userID] ? users[req.session.userID].email : null };
-  if (req.session.userID) {
+  if (req.session.userID && (users[req.session.userID] ? users[req.session.userID].email : null)) {
     res.render("urls_index", templateVars);
   } else {
     res.redirect("/login");
