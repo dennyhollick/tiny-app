@@ -2,10 +2,10 @@
 //TODO: [X] If user is not logged in, header should display Register/Login buttons
 //TODO: [X] If user goes to /, redirects to /urls (if not logged in, goes to login)
 //TODO: [X] Remove JS code from index and move to express_server
-//TODO: [ ] Add a: create a new link button to /urls
-//TODO: [ ] Redirect /urls to login if not logged in and display error msg
-//TODO: [ ] /login If user is logged in, redirect to /urls
-//TODO: [ ] /register If user is logged in, redirect to /urls
+//TODO: [X] Add a: create a new link button to /urls
+//TODO: [-] Redirect /urls to login if not logged in and display error msg
+//TODO: [X] /login If user is logged in, redirect to /urls
+//TODO: [X] /register If user is logged in, redirect to /urls
 //TODO: [ ] Clean up comments
 //TODO: [ ] Remove console.logs
 //TODO: [ ] Refactor and clean where possible, ES LINT
@@ -70,7 +70,11 @@ app.get("/", (req, res) => {
 
 app.get("/login", (req, res) => {
   let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
-  res.render("login", templateVars);
+  if (!req.session.user_id){
+    res.render("login", templateVars);
+  } else {
+    res.redirect("/urls");
+  }
 });
 
 //Applies user info to cookie upon login
@@ -105,7 +109,11 @@ app.post("/logout", (req, res) => {
 
 app.get("/register", (req, res) => {
   let templateVars = { urls: urlDatabase, user: req.session.user_id, email: users[req.session.user_id] ? users[req.session.user_id].email : null };
-  res.render("register", templateVars);
+  if (!req.session.user_id){
+    res.render("register", templateVars);
+  } else {
+    res.redirect("/urls");
+  }
 });
 
 //Creates a new user. Compares it to database first to make sure it doesn't exit and user inputs are valid.
