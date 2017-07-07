@@ -16,7 +16,7 @@ app.use(cookieSession({
 }));
 
 var urlDatabase = {
-  "b2xVn2": {longUrl: "http://www.lighthouselabs.ca", owner: "test" },
+  "b2xVn2": {longUrl: "http://lighthouselabs.ca", owner: "test" },
   "9sm5xK": {longUrl: "http://www.google.com", owner: "test"}
 };
 
@@ -135,12 +135,18 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   let urlId = req.params.id;
   const currentUser = req.session.user_id;
-  if (isAuthorizedtoChange(currentUser, urlId)) {
-    let templateVars = { shortURL: urlId, longURL: urlDatabase[urlId].longUrl, user: req.session.user_id };
-    res.render("urls_show", templateVars);
+  if (doesShortURLExist(urlId)) {
+    if (isAuthorizedtoChange(currentUser, urlId)) {
+      let longURL = urlDatabase[urlId].longUrl
+      let templateVars = { shortURL: urlId, longURL: longURL, user: req.session.user_id };
+      res.render("urls_show", templateVars);
+    } else {
+      res.statusCode = 401;
+      res.send('You are not authorized to view this URL. You do not own it or are not logged in.');
+    }
   } else {
-    res.statusCode = 401;
-    res.send('You are not authorized to view this URL. Please login.');
+    res.statusCode = 404;
+    res.send('Short URL does not exist.');
   }
 });
 
@@ -150,7 +156,8 @@ app.post("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase, user: req.session.user_id };
   const currentUser = req.session.user_id;
   const shortUrl = randomString();
-  urlDatabase[shortUrl] = {longUrl: req.body.longURL, owner: currentUser };
+  const longURL = fixURL(req.body.longURL);
+  urlDatabase[shortUrl] = {longUrl: longURL, owner: currentUser };
   console.log(shortUrl);
   console.log(req.body);
   console.log(urlDatabase);
@@ -177,7 +184,7 @@ app.post("/urls/:id/delete", (req, res) => {
 app.post("/urls/:id/update", (req, res) => {
   let templateVars = { urls: urlDatabase, user: req.session.user_id };
   const shortUrlToUpdate = req.params.id;
-  const updatedLongURL = req.body.longURL;
+  const updatedLongURL = fixURL(req.body.longURL);
   const currentUser = req.session.user_id;
 
   //checks if there is a cookie, and if user is authorized to update URL.
@@ -226,11 +233,19 @@ function isAuthorizedtoChange (currentUser, shortUrlToUpdate) {
   }
 }
 
-function getCurrentUser (cookie) {
-  if (cookie) {
-    return JSON.parse(cookie).id;
+function doesShortURLExist (shortUrl) {
+  for (url in urlDatabase) {
+    if (shortUrl === url) {
+      return true;
+    }
+  }
+}
+
+function fixURL (url) {
+  if (url.substring(0,6) !== 'http://' || url.substring(0,7) !== 'https://') {
+    return ("http://" + url);
   } else {
-    return "";
+    return url;
   }
 }
 
