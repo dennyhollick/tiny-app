@@ -2,7 +2,7 @@
 
 <% if (user) { %>
 
-<p>Welcome <%= JSON.parse(user).id %>!</p>
+<p>Welcome <%= user %>!</p>
 <form action="/logout" method="POST">
       <input type="submit" value="Logout">
 </form>

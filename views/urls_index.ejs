@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <% include ./partials/_header %>
+    <% include ./partials/_header %>
 </head>
 <body>
     <h1>Tiny App URLs</h1>
-
-   <ul>
-    <% for (url in urls) { %>
-        <% if (user && urls[url].owner === JSON.parse(user).id) { %>
-       <li> <%= url + " - " + urls[url].longUrl %> <a href ="/urls/<%= url %>">Update</a><form method="POST" action="/urls/<%= url %>/delete"> <input type="submit" value="Delete"></form></li>
-    <% }} %>
-
+    <ul>
+        <% for (url in urls) { %>
+            <% if (user && urls[url].owner === user) { %>
+                <li>
+                    <%= url + " - " + urls[url].longUrl %>
+                    <a href="/urls/<%= url %>">Update</a>
+                    <form method="POST" action="/urls/<%= url %>/delete">
+                        <input type="submit" value="Delete">
+                    </form>
+                </li>
+            <% } %>
+        <% } %>
    </ul>
-
 </body>
 </html>
