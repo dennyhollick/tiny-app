@@ -3,14 +3,21 @@
   <head>
     <% include ./partials/_header %>
   </head>
-      <body>
-          <h1>Register for TinyURL</h1>
-            <form action="/register" method="POST">
-              <label for="email">Enter a email:</label>
-              <input id="email" type="email" name="email" style="width: 300px"><br/>
-              <label for="password">Enter a password:</label>
-              <input id="password" type="password" name="password" style="width: 300px">
-              <input type="submit" value="Submit">
-          </form>
-      </body>
+  <body>
+    <div class="splash-container">
+        <div class="splash">
+            <h1 class="splash-head">Tiny URL.</h1>
+              <div class="splash_subform">
+                <form class="pure-form" "/register" method="POST">
+                  <fieldset>
+                    <legend>Register for TinyURL</legend>
+                      <input type="email" placeholder="Email" id="email" name="email">
+                      <input type="password" placeholder="Password" id="password" name="password">
+                    <button type="submit">Register</button>
+                </fieldset>
+              </form>
+            </div>
+        </div>
+    </div>
+  </body>
 </html>

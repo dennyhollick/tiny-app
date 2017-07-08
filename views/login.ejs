@@ -4,14 +4,21 @@
     <% include ./partials/_header %>
   </head>
     <body>
-      <h1>Login to TinyURL</h1>
-      
-      <form action="/login" method="POST">
-        <label for="email">Enter your email:</label>
-        <input id="email" type="email" name="email" style="width: 300px"><br/>
-        <label for="password">Enter your password:</label>
-        <input id="password" type="password" name="password" style="width: 300px">
-        <input type="submit" value="Submit">
-      </form>
-  </body>
+      <div class="splash-container">
+          <div class="splash">
+              <h1 class="splash-head">Tiny URL.</h1>
+                <p class="splash-subhead"> We make your big things small.</p>
+                <div class="splash_subform">
+                  <form class="pure-form" action="/login" method="POST">
+                    <fieldset>
+                      <legend>Login to start shortening URLs. Or don't.</legend>
+                        <input type="email" placeholder="Email" id="email" name="email">
+                        <input type="password" placeholder="Password" id="password" name="password">
+                      <button type="submit" class="pure-button pure-button-primary" style="background: #2d3e50;">Sign in</button>
+                  </fieldset>
+                </form>
+              </div>
+          </div>
+      </div>
+    </body>
 </html>

@@ -3,11 +3,19 @@
   <head>  
     <% include ./partials/_header %>
   </head>
-    <body style="font-size:20px; padding:50px;">
-      <form action="/urls" method="POST" style="margin:150px;">
-        <label for="longURL">Enter a URL:</label>
-        <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
-        <input type="submit" value="Submit">
-      </form>
+    <body>
+      <div class="content-wrapper">
+        <div class="content is-center">
+          <h1 class="content-head is-center">Create New URL</h1>
+          <form class="pure-form" method="POST" action="/urls">
+            <fieldset>
+              <legend style="width: 30%;">Enter a new URL</legend><br/>
+              <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
+              <button type="submit" class="pure-button pure-button-primary" style="margin-top: -15px;">Create URL</button>
+            </fieldset>
+          </form>
+          <button type="button" class="pure-button pure-button-primary" style="background: #2d3e50; width: 300px;" onclick="location.href='/urls';">Go Back to URLs</button>
+        </div>
+     </div>
     </body>
 </html>

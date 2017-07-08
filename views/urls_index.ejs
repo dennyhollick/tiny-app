@@ -3,19 +3,29 @@
   <head>
     <% include ./partials/_header %>
   </head>
-    <body>
-      <h1>Tiny App URLs</h1>
-      <a href="/urls/new">Create New Link</a>
-      <ul>
-        <% for (url in urls) { %>
-          <li>
-            <%= url + " - " + urls[url].longUrl %>
-            <a href="/urls/<%= url %>">Update</a>
-            <form method="POST" action="/urls/<%= url %>/delete">
-              <input type="submit" value="Delete">
-            </form>
-          </li>
-        <% } %>
-      </ul>
-    </body>
+  
+  <body>
+    <div class="content-wrapper">
+      <div class="content is-center">
+      <h2 class="content-head is-center">Your URLS</h2> 
+        <table align="center">
+          <% for (url in urls) { %>
+            <tr>
+              <form class="pure-form" method="POST" action="/urls/<%= url %>/delete">
+                <th style="text-align: left">
+                  <%= url + " - "%><a href="<%=urls[url].longUrl%>"><%= urls[url].longUrl %></a>
+                </th>
+                <th>
+                  <button type="button" class="pure-button pure-button-primary" onclick="location.href='/urls/<%= url %>';" value="Update" />Update</button></th>
+                <th>
+                  <button type="submit" class="pure-button pure-button-primary">Delete</button>
+                </th>
+              </form>
+            </tr>
+          <% } %>
+        </table>
+        <button type="button" class="pure-button" style="background: #2d3e50; width: 300px; margin-top: 20px" onclick="location.href='/urls/new';">Create New Link</button>
+      </div>
+    </div>
+  </body>
 </html>
