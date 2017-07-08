@@ -14,11 +14,15 @@ This is a full-stack web application built on Node and Express that allows users
 
 Login Page
 
+!["Login Page"](https://github.com/dennyhollick/tiny-app/blob/master/docs/Login.png)
 
 URL Page
 
+!["URL Page"]"https://github.com/dennyhollick/tiny-app/blob/master/docs/URLs.png
 
 Create New URL Page
+
+!["Create new URL"](https://github.com/dennyhollick/tiny-app/blob/master/docs/create_new.png)
 
 
 ## Dependencies
