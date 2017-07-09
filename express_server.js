@@ -1,30 +1,8 @@
-//TODO: [X] Change header to display email instead of userid
-//TODO: [X] If user is not logged in, header should display Register/Login buttons
-//TODO: [X] If user goes to /, redirects to /urls (if not logged in, goes to login)
-//TODO: [X] Remove JS code from index and move to express_server
-//TODO: [X] Add a: create a new link button to /urls
-//TODO: [-] Redirect /urls to login if not logged in and display error msg
-//TODO: [X] /login If user is logged in, redirect to /urls
-//TODO: [X] /register If user is logged in, redirect to /urls
-//TODO: [X] Clean up comments
-//TODO: [X] Remove console.logs
-//TODO: [X] Refactor and clean where possible, ES LINT
-//TODO: [ ] Final code review
-
-//TEST: [X] Test if no cookie is present
-//TEST: [X] Test if short URL is incorrect
-//TEST: [X] /url/:id returns error if does not exist
-
-//STRETCH: [ ] /url & /url:id displays Date url was created
-//STRETCH: [ ] /url & /url:id displays number of times URL visited
-//STRETCH: [ ] /url & /url:id displays number of unique visits
-//STRETCH: [ ] Make me pretty.
-
-//INITIALIZE
+//Use node express_server.js to initialize and go to localhost:8080 in browser.
+//Use README.md for more info on the app.
 
 const express = require("express");
 const app = express();
-const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
 const PORT = process.env.PORT || 8080;
 const bodyParser = require("body-parser");
